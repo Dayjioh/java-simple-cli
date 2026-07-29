@@ -20,44 +20,50 @@ public class Cli {
 			String command = scanner.nextLine(); // Get input from console as a string
 			String output = ""; // A variable named output of type String
 
-			String[] commandParts = command.split(" ", 2);
+			String[] commandAndArguments = command.split(" ", 2);
+			String commandName = commandAndArguments[0];
 
-			if (commandParts[0].equals("exit")) {
+			String arguments = "";
+			if (commandAndArguments.length >= 2) {
+				arguments = commandAndArguments[1];
+			}
+
+			if (commandName.equals("exit")) {
 				break; // Forces exit of the while loop
-			} else if (commandParts[0].equals("date")) {
+			} else if (commandName.equals("date")) {
 				LocalDate date = LocalDate.now();
 
 				output = date.toString();
-			} else if (commandParts[0].equals("time")) {
+			} else if (commandName.equals("time")) {
 				LocalTime time = LocalTime.now();
 
 				output = time.toString();
-			} else if (commandParts[0].equals("datetime")) {
+			} else if (commandName.equals("datetime")) {
 				LocalDateTime datetime = LocalDateTime.now();
 
 				output = datetime.toString();
-			} else if (commandParts[0].equals("useraccount")) {
+			} else if (commandName.equals("useraccount")) {
 				String userName = System.getProperty("user.name");
 				output = userName;
-			} else if (commandParts[0].equals("userhome")) {
+			} else if (commandName.equals("userhome")) {
 				String userHome = System.getProperty("user.home");
 				output = userHome;
-			} else if (commandParts[0].equals("os")) {
+			} else if (commandName.equals("os")) {
 				String osName = System.getProperty("os.name");
 				String osVersion = System.getProperty("os.version");
 				output = osName + " (" + osVersion + ")";
-			} else if (commandParts[0].equals("printenv")) {
-				if (commandParts.length < 2 || System.getenv(commandParts[1]) == null) {
+			} else if (commandName.equals("printenv")) {
+				if (arguments.equals("") || System.getenv(arguments) == null) {
 					output = "";
 				} else {
-					output = System.getenv(commandParts[1]);
+					output = System.getenv(arguments);
 				}
 
-			} else if (commandParts[0].equals("echo")) {
-				if (commandParts.length < 2) {
+			} else if (commandName.equals("echo")) {
+				if (arguments.equals("")) {
 					output = "";
 				} else {
-					output = commandParts[1];
+					output = arguments;
 				}
 
 			} else {
