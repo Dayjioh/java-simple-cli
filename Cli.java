@@ -2,6 +2,8 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cli {
 
@@ -28,7 +30,7 @@ public class Cli {
 				arguments = commandAndArguments[1];
 			}
 
-			if (commandName.equals("exit")) {
+			if (commandName.equals("exit") || commandName.equals("logout")) {
 				break; // Forces exit of the while loop
 			} else if (commandName.equals("date")) {
 				LocalDate date = LocalDate.now();
@@ -54,12 +56,21 @@ public class Cli {
 				output = osName + " (" + osVersion + ")";
 			} else if (commandName.equals("printenv")) {
 				if (arguments.equals("") || System.getenv(arguments) == null) {
-					output = "";
+					// Map<String, String> env = System.getenv();
+					// for (Map.Entry<String, String> entry : env.entrySet()) {
+					// output += entry.getKey() + " : " + entry.getValue() +"\n";
+
+					// }
+					HashMap<String, String> allEnvs = new HashMap<String, String>(System.getenv());
+
+					for (String env : allEnvs.keySet()) {
+						output += env + " : " + allEnvs.get(env) + "\n";
+					}
 				} else {
 					output = System.getenv(arguments);
 				}
 
-			} else if (commandName.equals("echo")) {
+			} else if (commandName.equals("echo") || commandName.equals("print")) {
 				if (arguments.equals("")) {
 					output = "";
 				} else {
