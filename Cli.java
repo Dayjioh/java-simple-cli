@@ -2,8 +2,10 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeSet;
 
 public class Cli {
 
@@ -23,10 +25,12 @@ public class Cli {
 			String output = ""; // A variable named output of type String
 
 			String[] commandAndArguments = command.split(" ", 2);
+
 			String commandName = commandAndArguments[0];
 
 			String arguments = "";
-			if (commandAndArguments.length >= 2) {
+
+			if (commandAndArguments.length > 1) {
 				arguments = commandAndArguments[1];
 			}
 
@@ -55,28 +59,38 @@ public class Cli {
 				String osVersion = System.getProperty("os.version");
 				output = osName + " (" + osVersion + ")";
 			} else if (commandName.equals("printenv")) {
-				if (arguments.equals("") || System.getenv(arguments) == null) {
-					// Map<String, String> env = System.getenv();
-					// for (Map.Entry<String, String> entry : env.entrySet()) {
-					// output += entry.getKey() + " : " + entry.getValue() +"\n";
 
-					// }
+				if (commandAndArguments.length > 1) {
+
+					output = System.getenv(arguments);
+					if (output == null) {
+						output = "";
+					}
+				} else {
+
 					HashMap<String, String> allEnvs = new HashMap<String, String>(System.getenv());
 
 					for (String env : allEnvs.keySet()) {
-						output += env + " : " + allEnvs.get(env) + "\n";
+						output += env + "=" + allEnvs.get(env) + "\n";
 					}
-				} else {
-					output = System.getenv(arguments);
 				}
 
 			} else if (commandName.equals("echo") || commandName.equals("print")) {
-				if (arguments.equals("")) {
-					output = "";
-				} else {
-					output = arguments;
-				}
 
+				output = arguments;
+
+			} else if (commandName.equals("ls")) {
+				File file = new File(arguments);
+				if (arguments.equals("") || !file.isDirectory()) {
+					output = "Not a directory";
+				} else {
+					TreeSet<String> nameDirectories = new TreeSet<String>();
+					Collections.addAll(nameDirectories, file.list());
+
+					for (String name : nameDirectories) {
+						output += name + "\n";
+					}
+				}
 			} else {
 				// String concatenation
 				output = "Command '" + command + "' not found.";
