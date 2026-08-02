@@ -3,8 +3,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.TreeSet;
 
 public class Cli {
@@ -90,6 +96,24 @@ public class Cli {
 					for (String name : nameDirectories) {
 						output += name + "\n";
 					}
+				}
+			} else if (commandName.equals("chuck")) {
+				Path chuckPath = Paths.get("chuck.txt");
+				try {
+					List<String> quotes = Files.readAllLines(chuckPath);
+					
+					int sizeQuotes = quotes.size();
+	
+					Random random = new Random();
+	
+					int randomQuotes = random.nextInt(sizeQuotes);
+
+					String quote = quotes.get(randomQuotes);
+
+					output = quote;
+
+				} catch (IOException e) {
+					output = "Unable to read chuck.txt: " + e.getMessage();
 				}
 			} else {
 				// String concatenation
