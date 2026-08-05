@@ -7,11 +7,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.TreeSet;
 
 public class Cli {
 
@@ -74,11 +73,14 @@ public class Cli {
 					}
 				} else {
 
-					HashMap<String, String> allEnvs = new HashMap<String, String>(System.getenv());
+					Map<String, String> allEnvs = System.getenv();
 
-					for (String env : allEnvs.keySet()) {
-						output += env + "=" + allEnvs.get(env) + "\n";
+					StringBuilder sb = new StringBuilder();
+					String newLine = System.lineSeparator();
+					for (Map.Entry<String, String> entry : allEnvs.entrySet()) {
+						sb.append(entry.getKey()).append("=").append(entry.getValue()).append(newLine);
 					}
+					output = sb.toString();
 				}
 
 			} else if (commandName.equals("echo") || commandName.equals("print")) {
@@ -90,22 +92,25 @@ public class Cli {
 				if (arguments.equals("") || !file.isDirectory()) {
 					output = "Not a directory";
 				} else {
-					TreeSet<String> nameDirectories = new TreeSet<String>();
-					Collections.addAll(nameDirectories, file.list());
+					String[] directoriesAndFiles = file.list();
+					Arrays.sort(directoriesAndFiles);
 
-					for (String name : nameDirectories) {
-						output += name + "\n";
+					StringBuilder sb = new StringBuilder();
+					String newLine = System.lineSeparator();
+					for (String directory : directoriesAndFiles) {
+						sb.append(directory).append(newLine);
 					}
+					output = sb.toString();
 				}
 			} else if (commandName.equals("chuck")) {
 				Path chuckPath = Paths.get("chuck.txt");
 				try {
 					List<String> quotes = Files.readAllLines(chuckPath);
-					
+
 					int sizeQuotes = quotes.size();
-	
+
 					Random random = new Random();
-	
+
 					int randomQuotes = random.nextInt(sizeQuotes);
 
 					String quote = quotes.get(randomQuotes);
